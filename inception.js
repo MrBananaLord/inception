@@ -4,6 +4,8 @@ function init() {
 
 class Inception {
   constructor() {
+    this.ratio = 10;
+
     this.dropField    = document.querySelector("#dropField");
     this.displayField = document.querySelector("#displayField");
     this.outerImage   = new Image(document.querySelector("#outerImage"));
@@ -52,12 +54,9 @@ class Inception {
 
   scroll(event) {
     if (event.deltaY > 0) {
-      console.debug("scroll out");
       this.outerImage.zoomOut();
     } else {
       this.outerImage.zoomIn();
-      console.debug("scroll in");
-
     }
   }
 
@@ -97,6 +96,7 @@ class Inception {
 class Image {
   constructor(element) {
     this.element = element;
+    this.container = this.element.parentElement;
     this.element.addEventListener("load", this.onload.bind(this));
     // this.center = { x: 0, y: 0 };
   }
@@ -106,12 +106,25 @@ class Image {
   }
 
   onload(event) {
-    // this.element.style.maxHeight = this.displayField.clientHeight;
-    // this.element.style.maxWidth  = this.displayField.clientWidth;
-    //
-    // this.element.style.left = (this.displayField.clientWidth - this.outerImage.clientWidth) / 2;
-    // this.element.style.top  = (this.displayField.clientHeight - this.outerImage.clientHeight) / 2;
-    // this.resizeTo(100, 100);
+    event.preventDefault();
+    this.center();
+  }
+
+  get constrainingDimension() {
+    if ((this.width * (this.container.clientHeight / this.height)) <= this.container.clientWidth) {
+      return 'y';
+    } else {
+      return 'x';
+    }
+  }
+
+  center() {
+    if (this.constrainingDimension == 'y') {
+      this.resizeTo(this.width * (this.container.clientHeight / this.height), this.container.clientHeight);
+    } else {
+      this.resizeTo(this.container.clientWidth, this.height * (this.container.clientWidth / this.width));
+    }
+
     this.resetMargin();
   }
 
@@ -121,14 +134,12 @@ class Image {
   }
 
   zoomIn() {
-    var ratio = 10;
-    this.resizeTo(this.width + ratio, this.height + ratio);
+    this.resizeTo(this.width + this.ratio, this.height + this.ratio);
     this.resetMargin();
   }
 
   zoomOut() {
-    var ratio = -10;
-    this.resizeTo(this.width + ratio, this.height + ratio);
+    this.resizeTo(this.width - this.ratio, this.height - this.ratio);
     this.resetMargin();
   }
 
