@@ -20,8 +20,9 @@ class Inception {
     this.outerImage      = new Image(document.querySelector("#outerImage"), this);
     this.innerImage      = new Image(document.querySelector("#innerImage"), this);
     this.innerInnerImage = new Image(document.querySelector("#innerInnerImage"), this);
+    this.innerInnerInnerImage = new Image(document.querySelector("#innerInnerInnerImage"), this);
 
-    this.inceptionRing = [this.innerInnerImage, this.innerImage, this.outerImage];
+    this.inceptionRing = [this.innerInnerInnerImage, this.innerInnerImage, this.innerImage, this.outerImage];
     // this.points       = document.getElementsByClassName("point");
 
     this.dropField.addEventListener("drop", this.dropHandler.bind(this));
@@ -43,9 +44,8 @@ class Inception {
 
     this.outerImage.src = URL.createObjectURL(event.dataTransfer.files[0]);
     this.innerImage.src = URL.createObjectURL(event.dataTransfer.files[0]);
-    this.innerImage.scale = 0.5;
     this.innerInnerImage.src = URL.createObjectURL(event.dataTransfer.files[0]);
-    this.innerInnerImage.scale = 0.5 / 8;
+    this.innerInnerInnerImage.src = URL.createObjectURL(event.dataTransfer.files[0]);
   }
 
   dragoverHandler(event) {
@@ -61,10 +61,12 @@ class Inception {
       this.outerImage.zoomOut();
       this.innerImage.zoomOut();
       this.innerInnerImage.zoomOut();
+      this.innerInnerInnerImage.zoomOut();
     } else {
       this.outerImage.zoomIn();
       this.innerImage.zoomIn();
       this.innerInnerImage.zoomIn();
+      this.innerInnerInnerImage.zoomIn();
     }
   }
 
@@ -73,14 +75,28 @@ class Inception {
 
     if (secondToLastImage.filledContainer) {
       var biggestImage = this.inceptionRing.pop();
-      biggestImage.scale = 0.5 / 8;
-      biggestImage.center();
+      biggestImage.minimize();
       this.inceptionRing.unshift(biggestImage);
 
-      for (var i = 0; i < this.inceptionRing.length; i++) {
-        this.inceptionRing[i].element.style.zIndex = this.inceptionRing.length - i;
-      }
+      this.zAlignImages();
     }
+  }
+
+  zAlignImages() {
+    for (var i = 0; i < this.inceptionRing.length; i++) {
+      this.inceptionRing[i].element.style.zIndex = this.inceptionRing.length - i;
+    }
+  }
+
+  decept() {
+    this.inceptionRing[3].fill();
+    this.inceptionRing[2].renderScaled(2 / 3);
+    this.inceptionRing[1].renderScaled(1 / 3);
+    this.inceptionRing[0].minimize();
+    this.zAlignImages();
+    // for (var image in this.inceptionRing) {
+    //   image.
+    // }
   }
 
   // resetPointPositions() {
@@ -137,7 +153,7 @@ class Image {
   }
 
   get scrollRatio() {
-    return 10;
+    return 20;
   }
 
   get constrainingDimension() {
@@ -162,17 +178,45 @@ class Image {
 
   onload(event) {
     event.preventDefault();
-    this.center();
+    this.inception.decept();
   }
 
-  center() {
+  fill() {
     if (this.constrainingDimension == 'y') {
-      this.resizeTo(this.scale * this.width * (this.container.clientHeight / this.height), this.scale * this.container.clientHeight);
+      this.resizeTo(this.container.clientWidth, this.container.clientWidth / this.aspectRatio);
     } else {
-      this.resizeTo(this.scale * this.container.clientWidth, this.scale * this.height * (this.container.clientWidth / this.width));
+      this.resizeTo(this.container.clientHeight * this.aspectRatio, this.container.clientHeight);
     }
 
     this.resetMargin();
+  }
+
+  minimize() {
+    this.scaleTo(20);
+    this.resetMargin();
+  }
+
+  renderScaled(scale) {
+    this.scaleTo(this.distance * scale);
+    this.resetMargin();
+  }
+
+  scaleTo(size) {
+    if (this.constrainingDimension == 'y') {
+      this.resizeTo(size, size / this.aspectRatio);
+    } else {
+      this.resizeTo(size * this.aspectRatio, size);
+    }
+
+    this.resetMargin();
+  }
+
+  get distance() {
+    if (this.constrainingDimension == 'y') {
+      return this.container.clientWidth - (20 * this.aspectRatio)
+    } else {
+      return this.container.clientHeight - (20 * this.aspectRatio)
+    }
   }
 
   resetMargin() {
