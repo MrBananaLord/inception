@@ -69,13 +69,17 @@ class Inception {
   }
 
   inceptiualize() {
-    var biggestImage = this.inceptionRing.pop();
-    biggestImage.scale = 0.5 / 8;
-    biggestImage.center();
-    this.inceptionRing.unshift(biggestImage);
+    var secondToLastImage = this.inceptionRing[this.inceptionRing.length - 2];
 
-    for (var i = 0; i < this.inceptionRing.size; i++) {
-      this.inceptionRing[i].style.zIndex = this.inceptionRing.size - i;
+    if (secondToLastImage.filledContainer) {
+      var biggestImage = this.inceptionRing.pop();
+      biggestImage.scale = 0.5 / 8;
+      biggestImage.center();
+      this.inceptionRing.unshift(biggestImage);
+
+      for (var i = 0; i < this.inceptionRing.length; i++) {
+        this.inceptionRing[i].element.style.zIndex = this.inceptionRing.length - i;
+      }
     }
   }
 
@@ -133,7 +137,7 @@ class Image {
   }
 
   get scrollRatio() {
-    return 100;
+    return 10;
   }
 
   get constrainingDimension() {
