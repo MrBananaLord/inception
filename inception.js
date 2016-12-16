@@ -3,24 +3,32 @@ function init() {
 }
 
 class Inception {
+  static get inception() {
+    if (!this._inception) {
+      this._inception = new Inception;
+    }
+
+    return this._inception
+  }
+
   constructor() {
-    this.ratio = 10;
+    this.scrollRatio = 10;
 
     this.dropField    = document.querySelector("#dropField");
     this.displayField = document.querySelector("#displayField");
-    this.outerImage   = new Image(document.querySelector("#outerImage"));
-    // this.innerImage   = document.querySelector("#innerImage");
+
+    this.outerImage      = new Image(document.querySelector("#outerImage"), this);
+    this.innerImage      = new Image(document.querySelector("#innerImage"), this);
+    this.innerInnerImage = new Image(document.querySelector("#innerInnerImage"), this);
+
+    this.inceptionRing = [this.innerInnerImage, this.innerImage, this.outerImage];
     // this.points       = document.getElementsByClassName("point");
 
     this.dropField.addEventListener("drop", this.dropHandler.bind(this));
     this.dropField.addEventListener("dragover", this.dragoverHandler.bind(this));
 
-    // this.outerImage.addEventListener("load", this.outerImageLoadHandler.bind(this));
-    // this.outerImage.addEventListener("scrollfnction", this.scroll.bind(this));
     document.body.addEventListener('mousewheel', this.scroll.bind(this));
 
-    // this.innerImage.addEventListener("load", this.innerImageLoadHandler.bind(this));
-    // this.innerImage.addEventListener("scrollfnction", this.scroll.bind(this));
     // this.points[0].addEventListener("drag", this.dragPointHandler.bind(this));
     // this.points[0].addEventListener("dragend", this.dropPointHandler.bind(this));
   }
@@ -34,6 +42,10 @@ class Inception {
     this.displayField.style.height = document.body.clientHeight;
 
     this.outerImage.src = URL.createObjectURL(event.dataTransfer.files[0]);
+    this.innerImage.src = URL.createObjectURL(event.dataTransfer.files[0]);
+    this.innerImage.scale = 0.5;
+    this.innerInnerImage.src = URL.createObjectURL(event.dataTransfer.files[0]);
+    this.innerInnerImage.scale = 0.5 / 8;
   }
 
   dragoverHandler(event) {
@@ -44,19 +56,26 @@ class Inception {
     // this.resetPointPositions();
   }
 
-  innerImageLoadHandler(event) {
-    this.innerImage.style.maxHeight = this.displayField.clientHeight / 4;
-    this.innerImage.style.maxWidth  = this.displayField.clientWidth / 4;
-
-    this.innerImage.style.left = (document.body.clientWidth - this.innerImage.clientWidth) / 2
-    this.innerImage.style.top = (document.body.clientHeight - this.innerImage.clientHeight) / 2
-  }
-
   scroll(event) {
     if (event.deltaY > 0) {
       this.outerImage.zoomOut();
+      this.innerImage.zoomOut();
+      this.innerInnerImage.zoomOut();
     } else {
       this.outerImage.zoomIn();
+      this.innerImage.zoomIn();
+      this.innerInnerImage.zoomIn();
+    }
+  }
+
+  inceptiualize() {
+    var biggestImage = this.inceptionRing.pop();
+    biggestImage.scale = 0.5 / 8;
+    biggestImage.center();
+    this.inceptionRing.unshift(biggestImage);
+
+    for (var i = 0; i < this.inceptionRing.size; i++) {
+      this.inceptionRing[i].style.zIndex = this.inceptionRing.size - i;
     }
   }
 
@@ -94,20 +113,27 @@ class Inception {
 }
 
 class Image {
-  constructor(element) {
-    this.element = element;
-    this.container = this.element.parentElement;
+  constructor(element, inception) {
+    this.element   = element;
+    this.inception = inception;
+    this.container = inception.displayField;
     this.element.addEventListener("load", this.onload.bind(this));
-    // this.center = { x: 0, y: 0 };
   }
 
   set src(source) {
     this.element.src = source;
   }
 
-  onload(event) {
-    event.preventDefault();
-    this.center();
+  set scale(value) {
+    this._resizeRatio = value;
+  }
+
+  get scale() {
+    return this._resizeRatio || 1;
+  }
+
+  get scrollRatio() {
+    return 100;
   }
 
   get constrainingDimension() {
@@ -118,11 +144,28 @@ class Image {
     }
   }
 
+  get filledContainer() {
+    if (this.constrainingDimension == 'y') {
+      return this.width > this.container.clientWidth
+    } else {
+      return this.height > this.container.clientHeight
+    }
+  }
+
+  get aspectRatio() {
+    return this.width / this.height;
+  }
+
+  onload(event) {
+    event.preventDefault();
+    this.center();
+  }
+
   center() {
     if (this.constrainingDimension == 'y') {
-      this.resizeTo(this.width * (this.container.clientHeight / this.height), this.container.clientHeight);
+      this.resizeTo(this.scale * this.width * (this.container.clientHeight / this.height), this.scale * this.container.clientHeight);
     } else {
-      this.resizeTo(this.container.clientWidth, this.height * (this.container.clientWidth / this.width));
+      this.resizeTo(this.scale * this.container.clientWidth, this.scale * this.height * (this.container.clientWidth / this.width));
     }
 
     this.resetMargin();
@@ -134,12 +177,16 @@ class Image {
   }
 
   zoomIn() {
-    this.resizeTo(this.width + this.ratio, this.height + this.ratio);
+    this.resizeTo(this.width + this.scrollRatio, this.height + (this.scrollRatio / this.aspectRatio));
     this.resetMargin();
+
+    if (this.filledContainer) {
+      this.inception.inceptiualize();
+    }
   }
 
   zoomOut() {
-    this.resizeTo(this.width - this.ratio, this.height - this.ratio);
+    this.resizeTo(this.width - this.scrollRatio, this.height - (this.scrollRatio / this.aspectRatio));
     this.resetMargin();
   }
 
