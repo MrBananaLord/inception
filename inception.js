@@ -1,5 +1,5 @@
 function init() {
-  var container = new Inception;
+  window.inception = new Inception;
 }
 
 class Inception {
@@ -47,16 +47,8 @@ class Inception {
     event.preventDefault();
   }
 
-  outerImageLoadHandler(event) {
-    // this.resetPointPositions();
-  }
-
   scroll(event) {
-    if (event.deltaY > 0) {
-      // for (var image of this.inceptionRing) { image.zoomOut() }
-    } else {
-      for (var image of this.inceptionRing) { image.zoomIn() }
-    }
+    for (var image of this.inceptionRing) { image.zoomIn() }
   }
 
   inceptiualize() {
@@ -68,6 +60,7 @@ class Inception {
       this.inceptionRing.unshift(biggestImage);
 
       this.zAlignImages();
+      // this.decept();
     }
   }
 
@@ -77,9 +70,27 @@ class Inception {
     }
   }
 
+  get lastImage() {
+    return this.inceptionRing[this.inceptionRing.length - 1];
+  }
+
+  get firstImage() {
+    return this.inceptionRing[0];
+  }
+
+  get ready() {
+    if (!this._ready) {
+      this._ready = !!this.lastImage.aspectRatio;
+    }
+
+    return this._ready;
+  }
+
   decept() {
-    this.inceptionRing[this.inceptionRing.length - 1].fill();
-    this.inceptionRing[0].minimize();
+    if (!this.ready) { return false };
+
+    this.lastImage.fill();
+    this.firstImage.minimize();
 
     for (var i = this.inceptionRing.length - 2; i > 0; i--) {
       this.inceptionRing[i].renderScaled(i / (this.inceptionRing.length - 1));
@@ -87,38 +98,6 @@ class Inception {
 
     this.zAlignImages();
   }
-
-  // resetPointPositions() {
-  //   var middle = {
-  //     x: this.displayField.clientWidth / 2,
-  //     y: this.displayField.clientHeight / 2
-  //   }
-  //   var offset = 20
-  //
-  //   this.points[0].style.top  = middle.y - offset;
-  //   this.points[0].style.left = middle.x - offset;
-  //
-  //   this.points[1].style.top  = middle.y + offset;
-  //   this.points[1].style.left = middle.x - offset;
-  //
-  //   this.points[2].style.top  = middle.y + offset;
-  //   this.points[2].style.left = middle.x + offset;
-  //
-  //   this.points[3].style.top  = middle.y - offset;
-  //   this.points[3].style.left = middle.x + offset;
-  // }
-
-  // dragPointHandler(event) {
-  //   event.preventDefault();
-  //   this.points[0].classList.add("hidden");
-  // }
-
-  // dropPointHandler(event) {
-  //   event.preventDefault();
-  //   this.points[0].classList.remove("hidden");
-  //   this.points[0].style.top  = event.clientY - 5;
-  //   this.points[0].style.left = event.clientX - 5;
-  // }
 }
 
 class Image {
@@ -162,11 +141,16 @@ class Image {
   }
 
   get aspectRatio() {
-    return this.width / this.height;
+    return this._aspectRatio;
+  }
+
+  set aspectRatio(value) {
+    this._aspectRatio = value;
   }
 
   onload(event) {
     event.preventDefault();
+    this.aspectRatio = this.width / this.height;
     this.inception.decept();
   }
 
@@ -220,11 +204,6 @@ class Image {
     if (this.filledContainer) {
       this.inception.inceptiualize();
     }
-  }
-
-  zoomOut() {
-    this.resizeTo(this.width - this.scrollRatio, this.height - (this.scrollRatio / this.aspectRatio));
-    this.resetMargin();
   }
 
   get height() {
