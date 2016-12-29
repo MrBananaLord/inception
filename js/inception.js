@@ -11,15 +11,19 @@ class Inception {
     this.dropField    = document.querySelector("#dropField");
     this.displayField = document.querySelector("#displayField");
 
-    this.inceptionRing = Array.prototype.slice.call(document.querySelectorAll("img")).map(function(element) {
-      return new Image(element);
-    });
-
     this.dropField.addEventListener("drop", this.dropHandler.bind(this));
     this.dropField.addEventListener("dragover", this.dragoverHandler.bind(this));
 
     document.body.addEventListener('mousewheel', this.scroll.bind(this));
     window.addEventListener('resize', this.decept.bind(this));
+
+    this.initializeRing();
+  }
+
+  initializeRing() {
+    this.ring = Array.prototype.slice.call(document.querySelectorAll("img")).map(function(element) {
+      return new Image(element, this);
+    }.bind(this));
   }
 
   dropHandler(event) {
@@ -28,7 +32,7 @@ class Inception {
     this.dropField.classList.add("hidden")
     this.displayField.classList.remove("hidden");
 
-    for (var image of this.inceptionRing) { image.element.src = URL.createObjectURL(event.dataTransfer.files[0]) }
+    for (var image of this.ring) { image.element.src = URL.createObjectURL(event.dataTransfer.files[0]) }
   }
 
   dragoverHandler(event) {
@@ -36,16 +40,16 @@ class Inception {
   }
 
   scroll(event) {
-    for (var image of this.inceptionRing) { image.zoomIn() }
+    for (var image of this.ring) { image.zoomIn() }
   }
 
   inceptiualize() {
-    var secondToLastImage = this.inceptionRing[this.inceptionRing.length - 2];
+    var secondToLastImage = this.ring[this.ring.length - 2];
 
     if (secondToLastImage.filledContainer) {
-      var biggestImage = this.inceptionRing.pop();
+      var biggestImage = this.ring.pop();
       biggestImage.minimize();
-      this.inceptionRing.unshift(biggestImage);
+      this.ring.unshift(biggestImage);
 
       this.zAlignImages();
       // this.decept();
@@ -53,17 +57,17 @@ class Inception {
   }
 
   zAlignImages() {
-    for (var i in this.inceptionRing) {
-      this.inceptionRing[i].element.style.zIndex = this.inceptionRing.length - i;
+    for (var i in this.ring) {
+      this.ring[i].element.style.zIndex = this.ring.length - i;
     }
   }
 
   get lastImage() {
-    return this.inceptionRing[this.inceptionRing.length - 1];
+    return this.ring[this.ring.length - 1];
   }
 
   get firstImage() {
-    return this.inceptionRing[0];
+    return this.ring[0];
   }
 
   get ready() {
@@ -80,8 +84,8 @@ class Inception {
     this.lastImage.fill();
     this.firstImage.minimize();
 
-    for (var i = this.inceptionRing.length - 2; i > 0; i--) {
-      this.inceptionRing[i].renderScaled(i / (this.inceptionRing.length - 1));
+    for (var i = this.ring.length - 2; i > 0; i--) {
+      this.ring[i].renderScaled(i / (this.ring.length - 1));
     }
 
     this.zAlignImages();
