@@ -27,6 +27,7 @@ class Inception {
     this.dropField.addEventListener("dragover", this.dragoverHandler.bind(this));
 
     document.body.addEventListener('mousewheel', this.scroll.bind(this));
+    window.addEventListener('resize', this.decept.bind(this));
 
     // this.points[0].addEventListener("drag", this.dragPointHandler.bind(this));
     // this.points[0].addEventListener("dragend", this.dropPointHandler.bind(this));
@@ -37,8 +38,6 @@ class Inception {
 
     this.dropField.classList.add("hidden")
     this.displayField.classList.remove("hidden");
-    this.displayField.style.width = document.body.clientWidth;
-    this.displayField.style.height = document.body.clientHeight;
 
     for (var image of this.inceptionRing) { image.element.src = URL.createObjectURL(event.dataTransfer.files[0]) }
   }

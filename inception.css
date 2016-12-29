@@ -39,4 +39,6 @@ img {
 #displayField {
   display: block;
   background-color: mediumaquamarine;
+  width: 100%;
+  height: 100%;
 }
