@@ -8,25 +8,18 @@ class Inception {
   }
 
   constructor() {
-    this.scrollRatio = 10;
-
     this.dropField    = document.querySelector("#dropField");
     this.displayField = document.querySelector("#displayField");
 
     this.inceptionRing = Array.prototype.slice.call(document.querySelectorAll("img")).map(function(element) {
-      return new Image(element, this);
-    }.bind(this));
-
-    // this.points       = document.getElementsByClassName("point");
+      return new Image(element);
+    });
 
     this.dropField.addEventListener("drop", this.dropHandler.bind(this));
     this.dropField.addEventListener("dragover", this.dragoverHandler.bind(this));
 
     document.body.addEventListener('mousewheel', this.scroll.bind(this));
     window.addEventListener('resize', this.decept.bind(this));
-
-    // this.points[0].addEventListener("drag", this.dragPointHandler.bind(this));
-    // this.points[0].addEventListener("dragend", this.dropPointHandler.bind(this));
   }
 
   dropHandler(event) {
