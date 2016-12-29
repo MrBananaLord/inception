@@ -48,7 +48,7 @@ class Inception {
 
     if (secondToLastImage.filledContainer) {
       var biggestImage = this.ring.pop();
-      biggestImage.minimize();
+      biggestImage.scaleTo(0);
       this.ring.unshift(biggestImage);
 
       this.zAlignImages();
@@ -81,10 +81,7 @@ class Inception {
   decept() {
     if (!this.ready) { return false };
 
-    this.lastImage.fill();
-    this.firstImage.minimize();
-
-    for (var i = this.ring.length - 2; i > 0; i--) {
+    for (var i in this.ring) {
       this.ring[i].renderScaled(i / (this.ring.length - 1));
     }
 

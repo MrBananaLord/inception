@@ -52,21 +52,6 @@ class Image {
     this.inception.decept();
   }
 
-  fill() {
-    if (this.constrainingDimension == 'y') {
-      this.resizeTo(this.container.clientWidth, this.container.clientWidth / this.aspectRatio);
-    } else {
-      this.resizeTo(this.container.clientHeight * this.aspectRatio, this.container.clientHeight);
-    }
-
-    this.resetMargin();
-  }
-
-  minimize() {
-    this.scaleTo(20);
-    this.resetMargin();
-  }
-
   renderScaled(scale) {
     this.scaleTo(this.distance * scale);
     this.resetMargin();
@@ -84,9 +69,9 @@ class Image {
 
   get distance() {
     if (this.constrainingDimension == 'y') {
-      return this.container.clientWidth - (20 * this.aspectRatio)
+      return this.container.clientWidth;
     } else {
-      return this.container.clientHeight - (20 * this.aspectRatio)
+      return this.container.clientHeight;
     }
   }
 
