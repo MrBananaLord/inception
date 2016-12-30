@@ -29,7 +29,7 @@ class Inception {
   dropHandler(event) {
     event.preventDefault();
 
-    this.dropField.classList.add("hidden")
+    this.dropField.classList.add("hidden");
     this.displayField.classList.remove("hidden");
 
     for (var image of this.ring) { image.element.src = URL.createObjectURL(event.dataTransfer.files[0]) }
