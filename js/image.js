@@ -1,8 +1,8 @@
 class Image {
-  constructor(element, container) {
-    this.element   = element;
+  constructor(container) {
     this.inception = Inception.inception;
     this.container = container;
+    this.element   = this.createNode();
     this.element.addEventListener("load", this.onload.bind(this));
   }
 
@@ -44,6 +44,10 @@ class Image {
 
   set aspectRatio(value) {
     this._aspectRatio = value;
+  }
+
+  createNode() {
+    return this.container.appendChild(document.createElement("img"));
   }
 
   onload(event) {

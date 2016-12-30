@@ -1,19 +1,30 @@
 class Images {
   constructor(container) {
     this.container = container;
-    this.collection = Array.prototype.slice.call(document.querySelectorAll("img")).map(function(element) {
-      return new Image(element, container);
-    });
+    this.generateCollection();
   }
 
+  get source()      { return this._source }
+  get quantity()    { return 4 }
   get first()       { return this.collection[0] }
-  get penultimate() { return this.collection[this.length - 2] }
-  get last()        { return this.collection[this.length - 1] }
-  get length()      { return this.collection.length }
+  get penultimate() { return this.collection[this.quantity - 2] }
+  get last()        { return this.collection[this.quantity - 1] }
   get loaded()      { return this.collection.every((image) => !!image.aspectRatio) }
-  set source(value) { this.collection.forEach((image) => image.src = value) }
+
+  set source(value) {
+    this._source = value;
+    this.collection.forEach((image) => image.src = value);
+  }
 
   scroll() { this.collection.forEach((image) => image.zoomIn()) }
+
+  generateCollection() {
+    this.collection = [];
+
+    for (var i = 0; i < this.quantity; i++) {
+      this.collection.push(new Image(this.container));
+    }
+  }
 
   inceptiualize() {
     if (this.penultimate.filledContainer) {
@@ -28,7 +39,7 @@ class Images {
 
   zAlign() {
     for (var i in this.collection) {
-      this.collection[i].element.style.zIndex = this.length - i;
+      this.collection[i].element.style.zIndex = this.quantity - i;
     }
   }
 
@@ -36,7 +47,7 @@ class Images {
     if (!this.loaded) { return false };
 
     for (var i in this.collection) {
-      this.collection[i].renderScaled(i / (this.length - 1));
+      this.collection[i].renderScaled(i / (this.quantity - 1));
     }
 
     this.zAlign();
