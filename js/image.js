@@ -1,8 +1,8 @@
 class Image {
-  constructor(element, inception) {
+  constructor(element, container) {
     this.element   = element;
-    this.inception = inception;
-    this.container = inception.displayField;
+    this.inception = Inception.inception;
+    this.container = container;
     this.element.addEventListener("load", this.onload.bind(this));
   }
 

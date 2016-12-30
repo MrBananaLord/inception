@@ -7,9 +7,9 @@ class Inception {
     return this._inception
   }
 
-  constructor() {
-    this.dropField    = document.querySelector("#dropField");
+  initialize() {
     this.displayField = document.querySelector("#displayField");
+    this.dropField    = document.querySelector("#dropField");
 
     this.dropField.addEventListener("drop", this.dropHandler.bind(this));
     this.dropField.addEventListener("dragover", this.dragoverHandler.bind(this));
@@ -22,7 +22,7 @@ class Inception {
 
   initializeRing() {
     this.ring = Array.prototype.slice.call(document.querySelectorAll("img")).map(function(element) {
-      return new Image(element, this);
+      return new Image(element, this.displayField);
     }.bind(this));
   }
 
@@ -87,4 +87,4 @@ class Inception {
 
     this.zAlignImages();
   }
-}
+};
