@@ -8,15 +8,16 @@ class Inception {
   }
 
   initialize() {
+    this.initializeGui()
+    this.initializeImages();
+  }
+
+  initializeGui() {
     this.displayField = document.querySelector("#displayField");
     this.dropField    = document.querySelector("#dropField");
 
     this.dropField.addEventListener("drop", this.dropHandler.bind(this));
     this.dropField.addEventListener("dragover", this.dragoverHandler.bind(this));
-
-    window.addEventListener('resize', this.decept.bind(this));
-
-    this.initializeImages();
   }
 
   initializeImages() {

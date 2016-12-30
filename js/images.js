@@ -2,6 +2,8 @@ class Images {
   constructor(container) {
     this.container = container;
     this.generateCollection();
+
+    window.addEventListener('resize', this.decept.bind(this));
   }
 
   get source()      { return this._source }
