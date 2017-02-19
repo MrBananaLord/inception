@@ -23,22 +23,36 @@ img {
   position: absolute;
 }
 
-#dropField {
+.container {
   background-color: mediumaquamarine;
   border-radius: 15px;
-  border: 3px dashed Gray;
+  border: 3px solid Gray;
   color: Gray;
   font-family: fantasy;;
   font-size: 30px;
   margin: 50px auto;
   padding: 20px;
   text-align: center;
-  width: 400px;
+}
+
+#dropField {
+  border-style: dashed;
+  width: 300px;
 }
 
 #displayField {
   display: block;
-  background-color: mediumaquamarine;
   width: 100%;
   height: 100%;
+}
+
+#gui {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  margin: 0;
+}
+
+#gui a {
+  display: block;
 }

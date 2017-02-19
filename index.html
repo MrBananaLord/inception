@@ -5,9 +5,14 @@
     <script src="js/inception.js"></script>
     <script src="js/image.js"></script>
     <script src="js/images.js"></script>
+    <script src="js/gui.js"></script>
   </head>
-  <body>
-    <div id="dropField">Drop image here</div>
+  <body id="inception">
+    <div id="gui" class="container">
+      <a href="#" data-action="hideGui">Hide</a>
+      <a href="#" data-action="autoPlay">Auto play</a>
+    </div>
+    <div id="dropField" class="container">Drop image here</div>
     <div id="displayField" class="hidden"></div>
     <script type="text/javascript">
       Inception.inception.initialize();

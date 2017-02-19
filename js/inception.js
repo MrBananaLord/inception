@@ -8,11 +8,15 @@ class Inception {
   }
 
   initialize() {
+    this.container = document.querySelector("#inception");
+
     this.initializeGui()
     this.initializeImages();
   }
 
   initializeGui() {
+    this.gui = new Gui(this.container);
+
     this.displayField = document.querySelector("#displayField");
     this.dropField    = document.querySelector("#dropField");
 
@@ -31,6 +35,8 @@ class Inception {
 
     this.dropField.classList.add("hidden");
     this.displayField.classList.remove("hidden");
+
+    this.gui.classList.remove('hidden');
 
     this.images.source = URL.createObjectURL(event.dataTransfer.files[0]);
   }
