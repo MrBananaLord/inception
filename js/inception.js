@@ -18,6 +18,7 @@ class Inception {
     initializeGui() {
         this.displayField = document.querySelector("#displayField");
         this.dropField = document.querySelector("#dropField");
+        this.gui = document.querySelector("#gui");
 
         this.dropField.addEventListener("drop", this.dropHandler.bind(this));
         this.dropField.addEventListener("dragover", this.dragoverHandler.bind(this));
@@ -31,6 +32,7 @@ class Inception {
         event.preventDefault();
 
         this.dropField.classList.add("hidden");
+        this.gui.classList.add("hidden");
         this.displayField.classList.remove("hidden");
 
         this.images.source = URL.createObjectURL(event.dataTransfer.files[0]);
@@ -47,11 +49,11 @@ class Inception {
     handleKeydown(e) {
         if (e.key == "ArrowUp") {
             this.intervalTime -= 5;
-            console.log(this.intervalTime);
+
             this.restartAnimation();
         } else if (e.key == "ArrowDown") {
             this.intervalTime += 5;
-            console.log(this.intervalTime);
+
             this.restartAnimation();
         }
     }

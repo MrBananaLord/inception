@@ -2,6 +2,7 @@
 
 <head>
     <title>Scrololo</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="inception.css" rel="stylesheet">
     <script src="js/inception.js"></script>
     <script src="js/image.js"></script>
@@ -10,6 +11,16 @@
 
 <body>
     <div id="dropField">Drop image here</div>
+    <div id="gui">
+        <div class="hint">
+            <div class="material-icons">arrow_upward</div>
+            <div>speed up</div>
+        </div>
+        <div class="hint">
+            <div class="material-icons">arrow_downward</div>
+            <div>slow down</div>
+        </div>
+    </div>
     <div id="displayField" class="hidden"></div>
     <script type="text/javascript">
         window.i = Inception.inception;
